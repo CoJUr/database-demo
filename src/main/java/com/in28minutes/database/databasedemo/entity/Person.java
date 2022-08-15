@@ -2,6 +2,7 @@ package com.in28minutes.database.databasedemo.entity;
 
 import java.util.Date;
 
+
 public class Person {
 
     private int id;

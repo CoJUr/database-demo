@@ -1,11 +1,15 @@
 package com.in28minutes.database.databasedemo.jdbc;
 
 import com.in28minutes.database.databasedemo.entity.Person;
+import org.h2.result.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -15,6 +19,19 @@ public class PersonJdbcDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    class PersonRowMapper implements RowMapper<Person> {
+//rowmapper interface defines how to map a row from the result set to a Java object. usually wont use the rowNumber parameter
+        @Override
+        public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Person person = new Person();
+            person.setId(rs.getInt("id"));
+            person.setName(rs.getString("name"));
+            person.setLocation(rs.getString("location"));
+            person.setBirthDate(rs.getDate("birth_date"));
+            return person;
+//            now if table definition is different from the class definition, we can use this custom rowmapper
+        }
+    }
 
     public List<Person> findAll() {
 /*        need to map data to the person bean
@@ -22,7 +39,7 @@ public class PersonJdbcDao {
          execute the query and return the results */
 
         return jdbcTemplate.query("select * from PERSON",
-                new BeanPropertyRowMapper<Person>(Person.class));
+                new PersonRowMapper());
         //  when using BeanPropertyRowMapper, need an empty constructor in the bean class
     }
 
