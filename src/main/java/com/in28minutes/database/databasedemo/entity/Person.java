@@ -1,16 +1,26 @@
 package com.in28minutes.database.databasedemo.entity;
 
+import javax.persistence.*;
 import java.util.Date;
 
-
+@Entity
+@Table(name = "PERSON")
 public class Person {
 
+    @Id
+    @GeneratedValue //hibernate generates a sequence to populate the id value
     private int id;
     private String name;
     private String location;
     private Date birthDate;
 
     public Person() {}
+
+    public Person(String name, String location, Date birthDate) {
+        this.name = name;
+        this.location = location;
+        this.birthDate = birthDate;
+    }
 
     public Person(int id, String name, String location, Date birthDate) {
         this.id = id;
